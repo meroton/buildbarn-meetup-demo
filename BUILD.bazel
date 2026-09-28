@@ -1,0 +1,32 @@
+load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
+package(default_visibility = ["//visibility:public"])
+
+genrule(
+    name = "hello",
+    outs = ["hello.sh"],
+    cmd = "echo 'echo Hello, Bazel!' > $@",
+    executable = True,
+)
+
+genrule(
+    name = "generate_useful_script",
+    outs = ["useful_script.sh"],
+    cmd = """
+    sleep 7
+    echo 'echo Zzzzzzzzz!' > $@
+    """,
+    executable = True,
+)
+
+sh_binary(
+    name = "do_something_useful",
+    srcs = [":generate_useful_script"],
+)
+
+
+genrule(
+    name = "test_compare_actions",
+    srcs = ["//tools:generate_metadata"],
+    outs = ["hello.txt"],
+    cmd = "echo 'Hello Bazel' > $@",
+)
